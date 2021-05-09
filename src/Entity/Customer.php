@@ -64,7 +64,7 @@ class Customer
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
-     * @Groups({"customers_read", "invoices_read"})
+     * @Groups({"customers_read"})
      */
     private $user;
 
@@ -80,7 +80,8 @@ class Customer
      *
      * @return float
      */
-    public function getTotalAmount(): float{
+    public function getTotalAmount(): float
+    {
         return array_reduce($this->invoices->toArray(), function($total, $invoice){
             return $total + $invoice->getAmount();
         }, 0);
@@ -93,7 +94,8 @@ class Customer
      *
      * @return float
      */
-    public function getUnpaidAmount(): float{
+    public function getUnpaidAmount(): float
+    {
         return array_reduce($this->invoices->toArray(), function($total, $invoice){
             return $total + ($invoice->getStatus() === "PAID" || $invoice->getStatus() === "CANCELLED" ? 0 : $invoice->getAmount());
         }, 0);
