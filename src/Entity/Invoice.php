@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
+use DateTime;
 use App\Entity\User;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\InvoiceRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
@@ -38,7 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      "disable_type_enforcement"=true
  *      }
  * )
- * @ApiFilter(OrderFilter::class)
+ * @ApiFilter(OrderFilter::class, properties={"amount","sentAt"})
  */
 class Invoice
 {
@@ -61,8 +63,8 @@ class Invoice
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
-     * @Assert\NotBlank(message="La date d'envoi doit être renseignée")
-     * @Assert\DateTime(message="La date doit être au format yyyy-mm-dd")
+     * @Assert\NotBlank(message="La date est obligatoire")
+     * @Assert\Type("\DateTime", message="La date doit être au format YYYY-MM-DD")
      */
     private $sentAt;
 
